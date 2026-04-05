@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Portfolio</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- Login Modal -->
+<div id="admin-login">
+  <div class="login-box">
+    <h2>Admin Access</h2>
+    <p>Enter your password to continue</p>
+    <div class="form-group" style="text-align:left;margin-bottom:16px">
+      <label class="form-label">Password</label>
+      <input type="password" class="form-input" id="admin-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkLogin()">
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="checkLogin()">Enter Dashboard</button>
+    <a href="portfolio.html" style="background:none;border:none;color:var(--text3);font-size:13px;display:block;margin-top:16px;width:100%;text-decoration:none;">← Back to Portfolio</a>
+    <div class="login-error" id="login-error">Incorrect password. Try: admin123</div>
+  </div>
+</div>
+
+<!-- Dashboard Layout -->
+<div id="admin-layout" style="display:none">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">⬡ ADMIN</div>
+    <nav class="admin-nav">
+      <div class="admin-nav-item active" onclick="showPanel('settings')">
+        <span class="icon">⚙</span> Settings
+      </div>
+      <div class="admin-nav-item" onclick="showPanel('projects-admin')">
+        <span class="icon">◈</span> Projects
+      </div>
+      <div class="admin-nav-item" onclick="showPanel('skills-admin')">
+        <span class="icon">◉</span> Skills
+      </div>
+      <div class="admin-nav-item" onclick="showPanel('experience-admin')">
+        <span class="icon">◷</span> Experience
+      </div>
+      <div class="admin-nav-item" onclick="showPanel('certs-admin')">
+        <span class="icon">✦</span> Certifications
+      </div>
+      <div class="admin-nav-item" onclick="showPanel('data-admin')">
+        <span class="icon">◤</span> Data
+      </div>
+    </nav>
+    <div class="admin-sidebar-bottom">
+      <a href="portfolio.html" class="admin-back" style="text-decoration:none;display:block;text-align:center;">← View Portfolio</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1 id="panel-title">Site Settings</h1>
+        <span id="panel-subtitle">Manage your portfolio content</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+          <span class="icon">☀️</span><span>Light</span>
+        </button>
+      </div>
+    </div>
+    <div class="admin-content">
+
+      <!-- ─── SETTINGS ─── -->
+      <div class="admin-panel active" id="panel-settings">
+        <div class="admin-success" id="settings-success">✓ Settings saved successfully!</div>
+        <div class="admin-form">
+          <h3>Personal Info</h3>
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label class="admin-label">Full Name</label>
+              <input type="text" class="admin-input" id="s-name" placeholder="Ahmed Hassan">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Job Title</label>
+              <input type="text" class="admin-input" id="s-title" placeholder="Data Analyst & BI Specialist">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Email</label>
+              <input type="text" class="admin-input" id="s-email" placeholder="hello@example.com">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">LinkedIn URL</label>
+              <input type="text" class="admin-input" id="s-linkedin" placeholder="linkedin.com/in/...">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">GitHub URL</label>
+              <input type="text" class="admin-input" id="s-github" placeholder="github.com/...">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Location</label>
+              <input type="text" class="admin-input" id="s-location" placeholder="Cairo, Egypt">
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">Hero Bio (short)</label>
+              <textarea class="admin-input" id="s-bio" rows="2" placeholder="Your short tagline..."></textarea>
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">About Section Bio</label>
+              <textarea class="admin-input" id="s-about1" rows="3" placeholder="First paragraph..."></textarea>
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">About Section Bio (2nd paragraph)</label>
+              <textarea class="admin-input" id="s-about2" rows="3" placeholder="Second paragraph..."></textarea>
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">About Tags (comma separated)</label>
+              <input type="text" class="admin-input" id="s-tags" placeholder="Python, SQL, Power BI">
+            </div>
+          </div>
+        </div>
+        <div class="admin-form">
+          <h3>Stats Counter</h3>
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 1 Value</label>
+              <input type="text" class="admin-input" id="s-s1v" placeholder="50+">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 1 Label</label>
+              <input type="text" class="admin-input" id="s-s1l" placeholder="Projects Completed">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 2 Value</label>
+              <input type="text" class="admin-input" id="s-s2v" placeholder="5+">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 2 Label</label>
+              <input type="text" class="admin-input" id="s-s2l" placeholder="Years Experience">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 3 Value</label>
+              <input type="text" class="admin-input" id="s-s3v" placeholder="20+">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 3 Label</label>
+              <input type="text" class="admin-input" id="s-s3l" placeholder="Tools & Technologies">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 4 Value</label>
+              <input type="text" class="admin-input" id="s-s4v" placeholder="30+">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Stat 4 Label</label>
+              <input type="text" class="admin-input" id="s-s4l" placeholder="Happy Clients">
+            </div>
+          </div>
+        </div>
+        <button class="admin-btn admin-btn-primary" onclick="saveSettings()">Save All Settings</button>
+      </div>
+
+      <!-- ─── PROJECTS ─── -->
+      <div class="admin-panel" id="panel-projects-admin">
+        <div class="admin-success" id="projects-success">✓ Project saved!</div>
+        <div class="admin-form">
+          <h3 id="proj-form-title">Add New Project</h3>
+          <input type="hidden" id="proj-edit-id">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label class="admin-label">Project Title</label>
+              <input type="text" class="admin-input" id="p-title" placeholder="Sales Dashboard 2024">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Category</label>
+              <select class="admin-input" id="p-cat">
+                <option>Data Visualization</option>
+                <option>Predictive Analytics</option>
+                <option>Business Intelligence</option>
+                <option>Machine Learning</option>
+                <option>Data Engineering</option>
+                <option>Statistical Analysis</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">Description</label>
+              <textarea class="admin-input" id="p-desc" placeholder="Describe the project..."></textarea>
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">Tools Used (comma separated)</label>
+              <input type="text" class="admin-input" id="p-tools" placeholder="Python, Pandas, Power BI, SQL">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Project Link (optional)</label>
+              <input type="text" class="admin-input" id="p-link" placeholder="https://github.com/...">
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:20px">
+            <button class="admin-btn admin-btn-primary" onclick="saveProject()">Save Project</button>
+            <button class="admin-btn admin-btn-secondary" onclick="clearProjectForm()">Clear</button>
+          </div>
+        </div>
+        <div class="admin-table-wrap" id="projects-table-wrap"></div>
+      </div>
+
+      <!-- ─── SKILLS ─── -->
+      <div class="admin-panel" id="panel-skills-admin">
+        <div class="admin-success" id="skills-success">✓ Skill saved!</div>
+        <div class="admin-form">
+          <h3 id="skill-form-title">Add New Skill</h3>
+          <input type="hidden" id="skill-edit-id">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label class="admin-label">Skill Name</label>
+              <input type="text" class="admin-input" id="sk-name" placeholder="Python">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Category</label>
+              <select class="admin-input" id="sk-cat">
+                <option>Programming & Tools</option>
+                <option>Databases & SQL</option>
+                <option>Visualization</option>
+                <option>Machine Learning</option>
+                <option>Cloud & DevOps</option>
+                <option>Soft Skills</option>
+              </select>
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">Proficiency Level</label>
+              <div class="range-group">
+                <input type="range" min="10" max="100" value="80" id="sk-level" oninput="document.getElementById('sk-level-val').textContent=this.value+'%'">
+                <span class="range-val" id="sk-level-val">80%</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:20px">
+            <button class="admin-btn admin-btn-primary" onclick="saveSkill()">Save Skill</button>
+            <button class="admin-btn admin-btn-secondary" onclick="clearSkillForm()">Clear</button>
+          </div>
+        </div>
+        <div class="admin-table-wrap" id="skills-table-wrap"></div>
+      </div>
+
+      <!-- ─── EXPERIENCE ─── -->
+      <div class="admin-panel" id="panel-experience-admin">
+        <div class="admin-success" id="exp-success">✓ Experience saved!</div>
+        <div class="admin-form">
+          <h3 id="exp-form-title">Add Experience</h3>
+          <input type="hidden" id="exp-edit-id">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label class="admin-label">Job Title</label>
+              <input type="text" class="admin-input" id="e-role" placeholder="Senior Data Analyst">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Company</label>
+              <input type="text" class="admin-input" id="e-company" placeholder="Company Name">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Start Date</label>
+              <input type="text" class="admin-input" id="e-start" placeholder="Jan 2022">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">End Date</label>
+              <input type="text" class="admin-input" id="e-end" placeholder="Present">
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">Description</label>
+              <textarea class="admin-input" id="e-desc" placeholder="What did you do in this role..."></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:20px">
+            <button class="admin-btn admin-btn-primary" onclick="saveExp()">Save</button>
+            <button class="admin-btn admin-btn-secondary" onclick="clearExpForm()">Clear</button>
+          </div>
+        </div>
+        <div class="admin-table-wrap" id="exp-table-wrap"></div>
+      </div>
+
+      <!-- ─── CERTS ─── -->
+      <div class="admin-panel" id="panel-certs-admin">
+        <div class="admin-success" id="certs-admin-success">✓ Certification saved!</div>
+        <div class="admin-form">
+          <h3 id="cert-form-title">Add Certification</h3>
+          <input type="hidden" id="cert-edit-id">
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label class="admin-label">Certificate Name</label>
+              <input type="text" class="admin-input" id="c-name" placeholder="Google Data Analytics">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Issuer</label>
+              <input type="text" class="admin-input" id="c-issuer" placeholder="Google / Coursera">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Year</label>
+              <input type="text" class="admin-input" id="c-year" placeholder="2024">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Badge Color</label>
+              <select class="admin-input" id="c-color">
+                <option value="cyan">Cyan</option>
+                <option value="gold">Gold</option>
+                <option value="purple">Purple</option>
+                <option value="green">Green</option>
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">Badge Icon (2 letters or emoji)</label>
+              <input type="text" class="admin-input" id="c-icon" placeholder="GD" maxlength="3">
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:20px">
+            <button class="admin-btn admin-btn-primary" onclick="saveCert()">Save</button>
+            <button class="admin-btn admin-btn-secondary" onclick="clearCertForm()">Clear</button>
+          </div>
+        </div>
+        <div class="admin-table-wrap" id="certs-admin-table-wrap"></div>
+      </div>
+
+      <!-- ─── DATA ─── -->
+      <div class="admin-panel" id="panel-data-admin">
+        <div class="admin-form">
+          <h3>Export / Import Data</h3>
+          <p style="color:var(--text2);font-size:14px;margin-bottom:20px">Backup your portfolio data or restore from a previous backup.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="admin-btn admin-btn-primary" onclick="exportData()">⬇ Export JSON Backup</button>
+            <button class="admin-btn admin-btn-secondary" onclick="document.getElementById('import-file').click()">⬆ Import JSON</button>
+            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+          </div>
+        </div>
+        <div class="admin-form">
+          <h3>Change Admin Password</h3>
+          <div class="admin-form-grid">
+            <div class="admin-form-group">
+              <label class="admin-label">Current Password</label>
+              <input type="password" class="admin-input" id="pw-current" placeholder="Current password">
+            </div>
+            <div class="admin-form-group">
+              <label class="admin-label">New Password</label>
+              <input type="password" class="admin-input" id="pw-new" placeholder="New password">
+            </div>
+          </div>
+          <button class="admin-btn admin-btn-primary" style="margin-top:16px" onclick="changePassword()">Update Password</button>
+          <div class="admin-success" id="pw-success">✓ Password updated!</div>
+          <div class="login-error" id="pw-error" style="display:none;margin-top:8px">Incorrect current password</div>
+        </div>
+        <div class="admin-form" style="border-color:rgba(255,100,100,.2)">
+          <h3 style="color:#ff6b6b">Danger Zone</h3>
+          <p style="color:var(--text2);font-size:14px;margin-bottom:16px">Reset all data to defaults. This cannot be undone.</p>
+          <button class="admin-btn admin-btn-danger" onclick="if(confirm('Reset ALL data to defaults?'))resetData()">Reset to Defaults</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

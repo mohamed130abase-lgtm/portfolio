@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analyst Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="portfolio.css">
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-logo">DA.PORTFOLIO</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">
+      <span class="icon">☀️</span><span>Light</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-canvas">
+    <div class="hero-grid"></div>
+    <canvas id="particleCanvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag" id="hero-tag">AVAILABLE FOR HIRE</div>
+    <h1 class="hero-name" id="hero-name">Ahmed <span>Hassan</span></h1>
+    <div class="hero-title" id="hero-title">Data Analyst & BI Specialist</div>
+    <p class="hero-bio" id="hero-bio">Transforming raw data into powerful insights. Specializing in advanced analytics, visualization, and data-driven decision making.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View My Work →</a>
+      <a href="#contact" class="btn btn-outline">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-num" id="stat1">50+</div>
+      <div class="stat-label" id="stat1-label">Projects Completed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat2">5+</div>
+      <div class="stat-label" id="stat2-label">Years Experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat3">20+</div>
+      <div class="stat-label" id="stat3-label">Tools & Technologies</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat4">30+</div>
+      <div class="stat-label" id="stat4-label">Happy Clients</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-img">
+      <div class="about-img-box">
+        <div class="about-avatar" id="about-initials">AH</div>
+      </div>
+      <div class="about-corner"></div>
+    </div>
+    <div class="about-text">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">Turning Data Into <span style="color:var(--cyan)">Decisions</span></h2>
+      <div id="about-bio-text">
+        <p>I'm a passionate Data Analyst with expertise in transforming complex datasets into clear, actionable insights. I combine statistical rigor with compelling storytelling to help organizations make data-driven decisions.</p>
+        <p>My approach bridges the gap between technical analysis and business strategy, ensuring that data insights directly translate into measurable outcomes.</p>
+      </div>
+      <div class="about-tags" id="about-tags">
+        <span class="tag">Python</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">Machine Learning</span>
+        <span class="tag">Statistics</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">Expertise</div>
+  <h2 class="section-title">Skills & <span style="color:var(--cyan)">Technologies</span></h2>
+  <div class="section-divider"></div>
+  <div class="skills-grid" id="skills-grid"></div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Portfolio</div>
+  <h2 class="section-title">Featured <span style="color:var(--cyan)">Projects</span></h2>
+  <div class="section-divider"></div>
+  <div class="projects-grid" id="projects-grid"></div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Career</div>
+  <h2 class="section-title">Work <span style="color:var(--cyan)">Experience</span></h2>
+  <div class="section-divider"></div>
+  <div class="timeline" id="timeline"></div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certs">
+  <div class="section-label">Credentials</div>
+  <h2 class="section-title">Certifications & <span style="color:var(--cyan)">Courses</span></h2>
+  <div class="section-divider"></div>
+  <div class="certs-grid" id="certs-grid"></div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div>
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">Let's <span style="color:var(--cyan)">Connect</span></h2>
+      <p style="color:var(--text2);line-height:1.8;margin-bottom:8px" id="contact-intro">Open to freelance projects, full-time roles, and data consulting. Let's discuss how I can help your team leverage data effectively.</p>
+      <div class="contact-links" id="contact-links"></div>
+    </div>
+    <div>
+      <div style="height:80px"></div>
+      <div class="contact-form">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" id="cf-name" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="cf-email" placeholder="john@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-input" id="cf-msg" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="sendContact()">Send Message →</button>
+        <div class="form-msg success" id="contact-success">✓ Message sent! I'll get back to you soon.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy" id="footer-copy">© 2025 Ahmed Hassan · Data Analyst</div>
+  <a href="admin.html" class="footer-admin" style="text-decoration:none;">[ ADMIN ]</a>
+</footer>
+
+<script src="portfolio.js"></script>
+</body>
+</html>
