@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard | Portfolio</title>
 <link rel="stylesheet" href="admin.css">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -25,7 +28,13 @@
 
 <!-- Dashboard Layout -->
 <div id="admin-layout" style="display:none">
-  <aside class="admin-sidebar">
+  <button class="mobile-sidebar-toggle" onclick="toggleMobileSidebar()" aria-label="Toggle sidebar">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="admin-sidebar-overlay" id="admin-sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+  <aside class="admin-sidebar" id="admin-sidebar">
     <div class="admin-logo">⬡ ADMIN</div>
     <nav class="admin-nav">
       <div class="admin-nav-item active" onclick="showPanel('settings')">
@@ -111,6 +120,20 @@
             <div class="admin-form-group full">
               <label class="admin-label">About Tags (comma separated)</label>
               <input type="text" class="admin-input" id="s-tags" placeholder="Python, SQL, Power BI">
+            </div>
+            <div class="admin-form-group full">
+              <label class="admin-label">Profile Photo</label>
+              <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+                <div id="profile-preview" style="width:120px;height:120px;border-radius:12px;background:var(--bg2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+                  <span style="color:var(--text3);font-size:14px">No image</span>
+                </div>
+                <div style="flex:1;min-width:200px">
+                  <input type="file" id="s-image" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+                  <button type="button" class="admin-btn admin-btn-secondary" onclick="document.getElementById('s-image').click()">Choose Image</button>
+                  <p style="color:var(--text3);font-size:12px;margin-top:8px">Recommended: Square image, 400x400px or larger</p>
+                  <button type="button" class="admin-btn admin-btn-danger admin-btn-sm" style="margin-top:8px;display:none" id="remove-image-btn" onclick="removeProfileImage()">Remove Image</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -316,12 +339,20 @@
       <!-- ─── DATA ─── -->
       <div class="admin-panel" id="panel-data-admin">
         <div class="admin-form">
-          <h3>Export / Import Data</h3>
-          <p style="color:var(--text2);font-size:14px;margin-bottom:20px">Backup your portfolio data or restore from a previous backup.</p>
+          <h3>Export Data for Website</h3>
+          <p style="color:var(--text2);font-size:14px;margin-bottom:20px">Download the current data as <code>data.json</code> and replace the file in your GitHub repository to update your live website.</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <button class="admin-btn admin-btn-primary" onclick="exportData()">⬇ Export JSON Backup</button>
-            <button class="admin-btn admin-btn-secondary" onclick="document.getElementById('import-file').click()">⬆ Import JSON</button>
-            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+            <button class="admin-btn admin-btn-primary" onclick="downloadDataJson()">⬇ Download data.json</button>
+          </div>
+          <div class="admin-success" id="data-success" style="margin-top:12px">✓ data.json downloaded! Replace the file in your repo and push to GitHub.</div>
+        </div>
+        <div class="admin-form">
+          <h3>Backup / Restore</h3>
+          <p style="color:var(--text2);font-size:14px;margin-bottom:20px">Create a backup or restore from a previous backup file.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="admin-btn admin-btn-secondary" onclick="exportBackup()">⬇ Export Backup</button>
+            <button class="admin-btn admin-btn-secondary" onclick="document.getElementById('import-file').click()">⬆ Import Backup</button>
+            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importBackup(event)">
           </div>
         </div>
         <div class="admin-form">

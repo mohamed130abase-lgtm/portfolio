@@ -172,12 +172,116 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .admin-form[style*="ff6b6b"]{border-color:rgba(239,68,68,0.3) !important}
 .admin-form h3[style*="ff6b6b"]{color:var(--error) !important}
 
-@media(max-width:768px){
-  .admin-sidebar{width:200px}
+/* Mobile sidebar toggle */
+.mobile-sidebar-toggle{display:none;position:fixed;top:20px;left:20px;z-index:999;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px;cursor:pointer}
+.mobile-sidebar-toggle span{display:block;width:20px;height:2px;background:var(--text);margin:4px 0;transition:all 0.3s}
+
+/* RESPONSIVE - Tablets */
+@media(max-width:1024px){
+  .admin-sidebar{width:220px}
+  .admin-logo{padding:24px 20px;font-size:13px}
+  .admin-nav-item{padding:12px 20px;font-size:13px;margin:4px 10px}
+  .admin-header{padding:24px 28px}
+  .admin-header h1{font-size:24px}
+  .admin-content{padding:28px}
+  .admin-form{padding:24px}
+  .admin-form-grid{gap:16px}
+}
+
+/* RESPONSIVE - Small Tablets */
+@media(max-width:900px){
   .admin-form-grid{grid-template-columns:1fr}
-  .admin-header{padding:20px 24px}
-  .admin-header h1{font-size:22px}
-  .admin-content{padding:24px}
-  .theme-toggle span{display:none}
-  .theme-toggle{padding:8px}
+  .admin-table th,.admin-table td{padding:14px 16px;font-size:13px}
+  .admin-table th{font-size:11px}
+  .admin-btn{padding:10px 20px;font-size:13px}
+}
+
+/* RESPONSIVE - Mobile */
+/* Mobile header layout */
+.admin-header .theme-toggle{order:2;margin-left:auto;margin-right:12px}
+
+/* Better mobile sidebar */
+@media(max-width:768px){
+  .admin-header{padding:16px 20px;flex-wrap:nowrap;justify-content:space-between}
+  .admin-header h1{font-size:18px;width:auto;flex:1;order:3;margin-left:60px}
+  .mobile-sidebar-toggle{order:1;position:static;display:flex}
+  .admin-sidebar{position:fixed;left:-260px;top:0;bottom:0;width:260px;transition:left 0.3s ease;z-index:998}
+  .admin-sidebar.open{left:0}
+  .admin-sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:997}
+  .admin-sidebar-overlay.show{display:block}
+  
+  .admin-main{width:100%}
+  .admin-header{padding:20px;flex-wrap:wrap;gap:12px}
+  .admin-header h1{font-size:20px;width:100%}
+  #panel-subtitle{font-size:11px}
+  .admin-content{padding:20px}
+  
+  .admin-form{padding:20px;margin-bottom:20px;border-radius:12px}
+  .admin-form h3{font-size:16px;margin-bottom:20px;padding-bottom:12px}
+  .admin-form-grid{grid-template-columns:1fr;gap:14px}
+  .admin-label{font-size:12px}
+  .admin-input{padding:12px 14px;font-size:14px;border-radius:10px}
+  textarea.admin-input{min-height:80px}
+  
+  .admin-btn{padding:10px 18px;font-size:13px;border-radius:10px}
+  .admin-btn-sm{padding:6px 12px;font-size:12px}
+  
+  .admin-table-wrap{border-radius:12px;overflow-x:auto}
+  .admin-table{min-width:600px}
+  .admin-table th,.admin-table td{padding:12px 14px;font-size:12px}
+  .admin-table th{font-size:10px;letter-spacing:0.5px}
+  .admin-table .actions{flex-wrap:wrap;gap:6px}
+  .empty-state{padding:40px 20px;font-size:14px}
+  
+  .range-group{gap:12px}
+  .range-val{font-size:13px}
+  
+  .theme-toggle{padding:8px;border-radius:50%;margin-right:0}
+  .theme-toggle .icon{font-size:18px}
+  .theme-toggle span:not(.icon){display:none}
+  
+  .login-box{padding:36px 24px;margin:20px;border-radius:16px}
+  .login-box h2{font-size:26px}
+  .login-box p{font-size:14px;margin-bottom:28px}
+  .btn{padding:14px 28px;font-size:14px}
+}
+
+/* RESPONSIVE - Small Mobile */
+@media(max-width:480px){
+  .mobile-sidebar-toggle{top:16px;left:16px;padding:8px}
+  .mobile-sidebar-toggle span{width:18px;height:2px;margin:3px 0}
+  
+  .admin-header{padding:16px}
+  .admin-header h1{font-size:18px}
+  .admin-content{padding:16px}
+  
+  .admin-form{padding:16px;border-radius:10px}
+  .admin-form h3{font-size:15px;margin-bottom:16px;padding-bottom:10px}
+  .admin-input{padding:10px 12px;font-size:13px;border-radius:8px}
+  
+  .admin-btn{padding:8px 16px;font-size:12px;border-radius:8px;gap:6px}
+  .admin-btn-sm{padding:5px 10px;font-size:11px}
+  
+  .login-box{padding:28px 20px;border-radius:14px}
+  .login-box h2{font-size:22px}
+  .login-box p{font-size:13px;margin-bottom:24px}
+  .form-input{padding:14px 16px;font-size:14px}
+  .btn{padding:12px 24px;font-size:13px}
+  
+  .level-badge{padding:4px 10px;font-size:11px}
+}
+
+/* RESPONSIVE - Extra Small */
+@media(max-width:360px){
+  .admin-header h1{font-size:16px}
+  .admin-form{padding:14px}
+  .admin-form h3{font-size:14px}
+  .admin-input{padding:10px 12px;font-size:12px}
+  .admin-btn{padding:8px 14px;font-size:11px}
+}
+
+/* LANDSCAPE MODE */
+@media(max-height:500px) and (orientation:landscape){
+  #admin-login{align-items:flex-start;padding-top:40px;overflow-y:auto}
+  .login-box{max-width:400px;margin-bottom:40px}
 }

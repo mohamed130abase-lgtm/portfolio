@@ -38,14 +38,56 @@ const DEFAULTS = {
   password:'admin123'
 };
 
-// State Management
-function getData(){
+// State Management - Load from JSON file, fallback to localStorage
+let portfolioData = null;
+
+async function loadData(){
+  // Try Firebase first if available
+  if(typeof loadFirebaseData === 'function'){
+    try{
+      portfolioData = await loadFirebaseData();
+      if(portfolioData) return portfolioData;
+    }catch(e){
+      console.log('Firebase not available, using fallback');
+    }
+  }
+  
+  // Fallback to data.json
+  try{
+    const response = await fetch('data.json');
+    if(response.ok){
+      portfolioData = await response.json();
+      return portfolioData;
+    }
+  }catch(e){
+    console.log('Could not load data.json, using localStorage or defaults');
+  }
+  
+  // Fallback to localStorage
   try{
     const d = localStorage.getItem('da_portfolio');
-    return d ? JSON.parse(d) : JSON.parse(JSON.stringify(DEFAULTS));
+    if(d){
+      portfolioData = JSON.parse(d);
+      return portfolioData;
+    }
   }catch(e){
-    return JSON.parse(JSON.stringify(DEFAULTS));
+    console.log('localStorage error, using defaults');
   }
+  
+  // Final fallback to defaults
+  portfolioData = JSON.parse(JSON.stringify(DEFAULTS));
+  return portfolioData;
+}
+
+function getData(){
+  if(portfolioData) return portfolioData;
+  
+  try{
+    const d = localStorage.getItem('da_portfolio');
+    if(d) return JSON.parse(d);
+  }catch(e){}
+  
+  return JSON.parse(JSON.stringify(DEFAULTS));
 }
 
 // Theme Management
@@ -75,6 +117,27 @@ function updateThemeToggleButton(theme){
   }
 }
 
+// Mobile Menu Toggle
+function toggleMobileMenu(){
+  const navLinks = document.getElementById('nav-links');
+  if(navLinks){
+    navLinks.classList.toggle('open');
+  }
+}
+
+// Close mobile menu when clicking on a link
+document.addEventListener('click', function(e){
+  const navLinks = document.getElementById('nav-links');
+  const menuToggle = document.querySelector('.mobile-menu-toggle');
+  
+  if(navLinks && navLinks.classList.contains('open')){
+    // Check if click is outside nav-links and not on the toggle button
+    if(!navLinks.contains(e.target) && (!menuToggle || !menuToggle.contains(e.target))){
+      navLinks.classList.remove('open');
+    }
+  }
+});
+
 // Rendering Functions
 function renderAll(){
   const d = getData();
@@ -98,7 +161,17 @@ function renderSettings(s){
   if(heroName) heroName.innerHTML = nameHtml(s.name);
   if(heroTitle) heroTitle.textContent = s.title;
   if(heroBio) heroBio.textContent = s.bio;
-  if(aboutInitials) aboutInitials.textContent = initials(s.name);
+  
+  // Handle about image or initials
+  const aboutImgBox = document.querySelector('.about-img-box');
+  if(aboutImgBox){
+    if(s.image){
+      aboutImgBox.innerHTML = `<img src="${s.image}" alt="${s.name}" style="width:100%;height:100%;object-fit:cover;border-radius:16px">`;
+    } else {
+      aboutImgBox.innerHTML = `<div class="about-avatar" id="about-initials">${initials(s.name)}</div>`;
+    }
+  }
+  
   if(aboutBioText) aboutBioText.innerHTML = `<p>${s.about1}</p><p>${s.about2}</p>`;
   if(aboutTags) aboutTags.innerHTML = s.tags.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('');
   
@@ -407,9 +480,20 @@ function initScrollAnim(){
 }
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+async function initPortfolio(){
+  await loadData();
   initTheme();
   renderAll();
   initParticles();
   setTimeout(initScrollAnim, 300);
-});
+  
+  // Setup real-time listener if Firebase is available
+  if(typeof onDataChange === 'function' && typeof portfolioRef !== 'undefined'){
+    onDataChange((data) => {
+      portfolioData = data;
+      renderAll();
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initPortfolio);

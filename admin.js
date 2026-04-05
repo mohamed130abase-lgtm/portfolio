@@ -39,16 +39,50 @@ const DEFAULTS = {
 };
 
 // Data Functions
-function getData(){
+let adminData = null;
+
+async function loadAdminData(){
+  // Try Firebase first if available
+  if(typeof loadFirebaseData === 'function'){
+    try{
+      adminData = await loadFirebaseData();
+      if(adminData) return adminData;
+    }catch(e){
+      console.log('Firebase not available, using localStorage');
+    }
+  }
+  
+  // Fallback to localStorage
   try{
     const d = localStorage.getItem('da_portfolio');
-    return d ? JSON.parse(d) : JSON.parse(JSON.stringify(DEFAULTS));
-  }catch(e){
-    return JSON.parse(JSON.stringify(DEFAULTS));
-  }
+    if(d){
+      adminData = JSON.parse(d);
+      return adminData;
+    }
+  }catch(e){}
+  
+  adminData = JSON.parse(JSON.stringify(DEFAULTS));
+  return adminData;
+}
+
+function getData(){
+  if(adminData) return adminData;
+  
+  try{
+    const d = localStorage.getItem('da_portfolio');
+    if(d) return JSON.parse(d);
+  }catch(e){}
+  
+  return JSON.parse(JSON.stringify(DEFAULTS));
 }
 
 function saveData(d){
+  adminData = d;
+  // Try Firebase first if available
+  if(typeof saveFirebaseData === 'function'){
+    saveFirebaseData(d);
+  }
+  // Always save to localStorage as backup
   localStorage.setItem('da_portfolio', JSON.stringify(d));
 }
 
@@ -91,14 +125,29 @@ function checkLogin(){
   if(!pw) return;
   
   if(pw.value === d.password){
-    document.getElementById('admin-login').classList.add('hidden');
-    document.getElementById('admin-layout').style.display = 'flex';
-    loadAdminForms();
-    showPanel('settings');
+    // Save login state
+    localStorage.setItem('admin_logged_in', 'true');
+    showDashboard();
   } else {
     const error = document.getElementById('login-error');
     if(error) error.style.display = 'block';
   }
+}
+
+function showDashboard(){
+  document.getElementById('admin-login').classList.add('hidden');
+  document.getElementById('admin-layout').style.display = 'flex';
+  loadAdminForms();
+  showPanel('settings');
+}
+
+function isLoggedIn(){
+  return localStorage.getItem('admin_logged_in') === 'true';
+}
+
+function logout(){
+  localStorage.removeItem('admin_logged_in');
+  location.reload();
 }
 
 function showPanel(id){
@@ -171,6 +220,17 @@ function loadAdminForms(){
     const el = document.getElementById(id);
     if(el) el.value = val || '';
   });
+  
+  // Load profile image
+  const preview = document.getElementById('profile-preview');
+  const removeBtn = document.getElementById('remove-image-btn');
+  if(preview && s.image){
+    preview.innerHTML = `<img src="${s.image}" style="width:100%;height:100%;object-fit:cover">`;
+    if(removeBtn) removeBtn.style.display = 'inline-flex';
+  } else if(preview){
+    preview.innerHTML = '<span style="color:var(--text3);font-size:14px">No image</span>';
+    if(removeBtn) removeBtn.style.display = 'none';
+  }
 }
 
 function saveSettings(){
@@ -516,13 +576,45 @@ function renderCertsTable(){
 }
 
 // Data Export/Import
-function exportData(){
+function downloadDataJson(){
+  const d = getData();
+  // Remove password from exported data for security
+  const exportData = {...d};
+  delete exportData.password;
+  
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'data.json';
+  a.click();
+  
+  showSuccess('data-success');
+}
+
+function exportBackup(){
   const d = getData();
   const blob = new Blob([JSON.stringify(d, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'portfolio-backup-' + new Date().toISOString().split('T')[0] + '.json';
   a.click();
+}
+
+function importBackup(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  
+  const r = new FileReader();
+  r.onload = ev => {
+    try{
+      const d = JSON.parse(ev.target.result);
+      localStorage.setItem('da_portfolio', JSON.stringify(d));
+      location.reload();
+    }catch(err){
+      alert('Invalid JSON file');
+    }
+  };
+  r.readAsText(file);
 }
 
 function importData(e){
@@ -588,7 +680,68 @@ function escapeHtml(text){
     .replace(/'/g, '&#039;');
 }
 
+// Image handling
+function handleImageUpload(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  
+  if(file.size > 2 * 1024 * 1024){
+    alert('Image too large. Maximum size is 2MB.');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const d = getData();
+    d.settings.image = e.target.result;
+    saveData(d);
+    
+    const preview = document.getElementById('profile-preview');
+    const removeBtn = document.getElementById('remove-image-btn');
+    if(preview){
+      preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+    }
+    if(removeBtn) removeBtn.style.display = 'inline-flex';
+    
+    showSuccess('settings-success');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeProfileImage(){
+  const d = getData();
+  delete d.settings.image;
+  saveData(d);
+  
+  const preview = document.getElementById('profile-preview');
+  const removeBtn = document.getElementById('remove-image-btn');
+  if(preview){
+    preview.innerHTML = '<span style="color:var(--text3);font-size:14px">No image</span>';
+  }
+  if(removeBtn) removeBtn.style.display = 'none';
+}
+
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+async function initAdmin(){
   initTheme();
-});
+  // Try to load from Firebase if available
+  if(typeof loadFirebaseData === 'function'){
+    await loadAdminData();
+  }
+  // Check if already logged in
+  if(isLoggedIn()){
+    showDashboard();
+  }
+}
+
+// Mobile Sidebar Toggle
+function toggleMobileSidebar(){
+  const sidebar = document.getElementById('admin-sidebar');
+  const overlay = document.getElementById('admin-sidebar-overlay');
+  if(sidebar && overlay){
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initAdmin);
